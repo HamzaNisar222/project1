@@ -3,10 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Str;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -50,5 +52,19 @@ class User extends Authenticatable
     public function apiTokens()
     {
         return $this->morphMany(ApiToken::class, 'tokenable');
+    }
+
+    public static function createUser($data)
+    {
+        return self::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'phone_number' => $data['phone_number'],
+            'address' => $data['address'],
+            'role'=>'client',
+            'status' => 0, // Inactive
+            'confirmation_token' => Str::random(60),
+        ]);
     }
 }
