@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\User;
+use App\Models\Client;
 use App\Mail\ConfirmationEmail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -19,7 +19,7 @@ class SendConfirmationEmail implements ShouldQueue
     protected $user;
     protected $confirmationUrl;
 
-    public function __construct(User $user, $confirmationUrl)
+    public function __construct(Client $user, $confirmationUrl)
     {
         $this->user = $user;
         $this->confirmationUrl = $confirmationUrl;

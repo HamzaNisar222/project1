@@ -23,7 +23,6 @@ class VendorController extends Controller
         if (isset($response['error'])) {
             return response()->json(['error' => 'Unable to fetch available services'], 500);
         }
-
         return response()->json($response);
     }
 

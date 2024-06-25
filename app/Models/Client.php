@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class Client extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -64,28 +64,38 @@ class User extends Authenticatable
             'password' => Hash::make($data['password']),
             'phone_number' => $data['phone_number'],
             'address' => $data['address'],
-            'role'=>'client',
+            'role' => 'client',
             'status' => 0, // Inactive
             'confirmation_token' => Str::random(60),
         ]);
     }
 
-        // Authenticate user
-        public static function authenticate($email, $password)
-        {
 
-            $user = static::where('email', $email)->first();
-            if (!$user) {
+    public function clientRequests()
+    {
+        return $this->hasMany(ClientRequest::class, 'client_id');
+    }
 
-                return null; // User not found
-            }
-            if (!$user->status) {
-                return null; // Account not active
-            }
-            if (!Hash::check($password, $user->password)) {
-                return null; // Incorrect password
-            }
+    public function vendorServiceOfferings()
+    {
+        return $this->hasMany(VendorServiceOffering::class, 'vendor_id');
+    }
+    // Authenticate user
+    public static function authenticate($email, $password)
+    {
 
-            return $user;
+        $user = static::where('email', $email)->first();
+        if (!$user) {
+
+            return null; // User not found
         }
+        if (!$user->status) {
+            return null; // Account not active
+        }
+        if (!Hash::check($password, $user->password)) {
+            return null; // Incorrect password
+        }
+
+        return $user;
+    }
 }
